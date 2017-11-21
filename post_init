@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#Set TCP redirection
+/usr/bin/iptables -t nat -I PREROUTING -p tcp -m mark --mark 1000 -j REDIRECT --to-port 1080
+/usr/bin/iptables -t nat -I OUTPUT -p tcp -m mark --mark 1000 -j REDIRECT --to-port 1080
+
+#Restart ChinaDNS
+/usr/bin/systemctl restart chinadns.service
+
+#Start miniupnpd
+/usr/bin/systemctl start miniupnpd.service

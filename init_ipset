@@ -1,0 +1,14 @@
+#!/bin/sh
+IPSET='/usr/bin/ipset'
+SETS=( 'cn_prefixes' )
+
+for set_name in ${SETS[@]}; do
+	if [[ $1 == "del" ]]; then
+		$IPSET destroy $set_name
+		continue
+	fi
+	$IPSET create $set_name hash:net
+	while read line; do
+		$IPSET add $set_name $line
+	done < ${set_name}.list
+done

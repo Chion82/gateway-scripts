@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#Remove TCP redirection
+/usr/bin/iptables -t nat -D PREROUTING -p tcp -m mark --mark 1000 -j REDIRECT --to-port 1080
+/usr/bin/iptables -t nat -D OUTPUT -p tcp -m mark --mark 1000 -j REDIRECT --to-port 1080
+
+#Stop miniupnpd
+/usr/bin/systemctl stop miniupnpd.service

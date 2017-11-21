@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# VPN_GATEWAYS = ( 'ID,REAL_IP,VPN_IP,VPN_NETWORK,VPN_INTERFACE' )
+# ID is used as both iptables mark and route table id
+VPN_GATEWAYS=( '200,103.0.0.1,192.168.100.1,192.168.100.0/24,chionvpn' )
+
+DEFAULT_INTERFACE='enp1s0'
+DEFAULT_ID='100'
+
+RULES=(\
+ 'IP,DST,10.0.0.0/8,100' \
+ 'IP,DST,172.16.0.0/12,100' \
+ 'IP,DST,192.168.0.0/16,100' \
+ 'IP,DST,73.158.130.51,100' \
+ 'IP,DST,218.75.225.18,100' \
+ 'IP,SRC,192.168.50.201,200' \
+ 'RAW,-p$tcp$-m$set$!$--match-set$cn_prefixes$dst$-j$MARK$--set-mark$1000'
+ 'SET,DST,!cn_prefixes,200' \
+)
+
+IPTABLES='/usr/bin/iptables'
+IPSET='/usr/bin/ipset'
+IPROUTE2='/usr/bin/ip'
+
+CHANGE_RPFILTER=yes
+
